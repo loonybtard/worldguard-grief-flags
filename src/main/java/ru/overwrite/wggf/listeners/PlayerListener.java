@@ -70,11 +70,15 @@ public class PlayerListener implements Listener {
         if (event.getEntityType() != EntityType.WITHER)
             return;
 
-        event.setCancelled(false);
-        for (String blocks : plugin.getConfig().getStringList("excluded-blocks"))
-            if (blocks.contains(event.getBlock().getType().toString())) {
-                event.setCancelled(true);
-            }
+        Block block = event.getBlock();
+
+        ApplicableRegionSet regions = this.getRegionSet(block.getLocation());
+        if (regions == null)
+            return;
+
+        if (regions.testState(null, plugin.wgFlags.get("grief-allow-wither")))
+            event.setCancelled(false);
+
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
