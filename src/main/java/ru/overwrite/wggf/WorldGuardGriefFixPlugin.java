@@ -33,7 +33,6 @@ public class WorldGuardGriefFixPlugin extends JavaPlugin implements Listener {
         }
 
         reloadConfig();
-        listener.loadProtectedRegion(getConfig());
         sender.sendMessage(color("&f[&6WGGF&f] Конфиг был перезагружен!"));
         return true;
     }

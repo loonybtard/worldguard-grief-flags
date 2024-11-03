@@ -1,10 +1,16 @@
 package ru.overwrite.wggf.listeners;
 
-import lombok.val;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
@@ -16,38 +22,18 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import ru.overwrite.wggf.WorldGuardGriefFixPlugin;
-import ru.overwrite.wggf.objects.ProtectedRegion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class PlayerListener implements Listener {
 
     WorldGuardGriefFixPlugin plugin;
-    List<ProtectedRegion> protectedRegionList = new ArrayList<>();
 
     List<Material> fallingBlocks = Arrays.asList(Material.SAND, Material.GRAVEL, Material.ANVIL); // Временно, потому перепишу
     List<Material> interactBlocks = Arrays.asList(Material.AIR, Material.WATER, Material.SNOW, Material.LAVA);
 
     public PlayerListener(WorldGuardGriefFixPlugin plugin) {
         this.plugin = plugin;
-        this.loadProtectedRegion(plugin.getConfig());
-    }
-
-    public void loadProtectedRegion(FileConfiguration configuration) {
-        if (!this.protectedRegionList.isEmpty()) {
-            this.protectedRegionList.clear();
-            for (String regionName : configuration.getConfigurationSection("regions").getKeys(false)) {
-                int x1 = configuration.getInt("regions." + regionName + ".x1", 0);
-                int y1 = configuration.getInt("regions." + regionName + ".y1", 0);
-                int z1 = configuration.getInt("regions." + regionName + ".z1", 0);
-                int x2 = configuration.getInt("regions." + regionName + ".x2", 0);
-                int y2 = configuration.getInt("regions." + regionName + ".y2", 0);
-                int z2 = configuration.getInt("regions." + regionName + ".z2", 0);
-                protectedRegionList.add(new ProtectedRegion(x1, y1, z1, x2, y2, z2));
-            }
-        }
+        this.worldGuard = WorldGuard.getInstance();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -120,13 +106,10 @@ public class PlayerListener implements Listener {
         }
     }
 
+    // FIXME: remove method
     private boolean checkLocation(Location location) {
         if (location == null)
             return false;
-
-        for (ProtectedRegion protectedRegion : protectedRegionList)
-            if (protectedRegion.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
-                return false;
 
         return true;
     }
