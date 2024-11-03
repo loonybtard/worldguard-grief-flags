@@ -9,7 +9,6 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -37,10 +36,17 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPistonExtend(BlockPistonExtendEvent event) {
-        FileConfiguration config = plugin.getConfig();
-        if (!config.getBoolean("enable-pistons")) return;
         for (Block block : event.getBlocks()) {
-            if (!config.getStringList("excluded-blocks").contains(block.getType().toString()) && checkLocation(block.getLocation())) {
+            Location locationDest = block.getLocation().add(
+                    event.getDirection().getModX(),
+                    event.getDirection().getModY(),
+                    event.getDirection().getModZ()
+            );
+            ApplicableRegionSet regions = getRegionSet(locationDest);
+            if (regions == null)
+                continue;
+
+            if (regions.testState(null, plugin.wgFlags.get("grief-allow-piston"))) {
                 event.setCancelled(false);
                 return;
             }
@@ -49,13 +55,17 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockRetract(BlockPistonRetractEvent event) {
-        if (!plugin.getConfig().getBoolean("enable-pistons")) return;
 
-        for (Block block : event.getBlocks())
-            if (this.checkLocation(block.getLocation())) {
+        for (Block block : event.getBlocks()) {
+            ApplicableRegionSet regions = getRegionSet(block.getLocation());
+            if (regions == null)
+                continue;
+
+            if (regions.testState(null, plugin.wgFlags.get("grief-allow-piston"))) {
                 event.setCancelled(false);
                 return;
             }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

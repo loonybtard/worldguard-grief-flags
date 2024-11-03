@@ -33,11 +33,11 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 
         String[] flagsToInit = {
-                "grief-allow-falling", // done
-                "grief-allow-wither", // done
+                "grief-allow-falling",
+                "grief-allow-wither",
                 "grief-allow-piston",
-                "grief-allow-hopper", // done
-                "grief-allow-explosions", // done
+                "grief-allow-hopper",
+                "grief-allow-explosions",
         };
 
         for (String flagName : flagsToInit) {
