@@ -1,4 +1,4 @@
-package ru.overwrite.wggf;
+package ru.idleness.worldguardgriefflags;
 
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -10,11 +10,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.overwrite.wggf.listeners.PlayerListener;
+import ru.idleness.worldguardgriefflags.listeners.PlayerListener;
 
 import java.util.HashMap;
 
-public class WorldGuardGriefFixPlugin extends JavaPlugin implements Listener {
+public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
 
     private PlayerListener listener;
 

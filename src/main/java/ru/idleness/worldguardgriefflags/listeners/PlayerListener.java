@@ -1,4 +1,4 @@
-package ru.overwrite.wggf.listeners;
+package ru.idleness.worldguardgriefflags.listeners;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -21,16 +21,16 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import ru.overwrite.wggf.WorldGuardGriefFixPlugin;
+import ru.idleness.worldguardgriefflags.WorldGuardGriefFlagsPlugin;
 
 
 public class PlayerListener implements Listener {
 
-    WorldGuardGriefFixPlugin plugin;
+    WorldGuardGriefFlagsPlugin plugin;
 
     WorldGuard worldGuard;
 
-    public PlayerListener(WorldGuardGriefFixPlugin plugin) {
+    public PlayerListener(WorldGuardGriefFlagsPlugin plugin) {
         this.plugin = plugin;
         this.worldGuard = WorldGuard.getInstance();
     }

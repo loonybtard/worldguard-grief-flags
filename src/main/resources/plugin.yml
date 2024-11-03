@@ -1,6 +1,7 @@
 name: WorldGuardGriefFix
-main: ru.overwrite.wggf.WorldGuardGriefFixPlugin
+main: ru.idleness.worldguardgriefflags.WorldGuardGriefFlagsPlugin
 authors:
+  - ThaEin
   - Afek
   - OverWrite
 version: 4.0

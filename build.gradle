@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'me.afek'
+group = 'ru.idleness'
 version = '1.0.1'
 
 compileJava.options.encoding = 'UTF-8'
@@ -27,8 +27,6 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.9'
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 def targetJavaVersion = 17
