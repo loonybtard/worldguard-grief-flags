@@ -28,8 +28,7 @@ public class PlayerListener implements Listener {
 
     WorldGuardGriefFixPlugin plugin;
 
-    List<Material> fallingBlocks = Arrays.asList(Material.SAND, Material.GRAVEL, Material.ANVIL); // Временно, потому перепишу
-    List<Material> interactBlocks = Arrays.asList(Material.AIR, Material.WATER, Material.SNOW, Material.LAVA);
+    WorldGuard worldGuard;
 
     public PlayerListener(WorldGuardGriefFixPlugin plugin) {
         this.plugin = plugin;
@@ -80,19 +79,20 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        val entity = event.getEntity();
-        val block = event.getBlock();
-        val to = event.getTo();
+        Entity entity = event.getEntity();
+        Block block = event.getBlock();
+        Material to = event.getTo();
 
-        if (!(entity instanceof FallingBlock) || !this.plugin.getConfig().getBoolean("enable-falling-block"))
+        if (!(entity instanceof FallingBlock))
             return;
 
-        if (this.interactBlocks.contains(block.getType()) &&
-                this.fallingBlocks.contains(to) &&
-                this.checkLocation(block.getLocation()) &&
-                !this.plugin.getConfig().getStringList("excluded-blocks").contains(block.getType().name())) {
-            event.setCancelled(true); // Отменяем евент, чтобы сыпущий блок не выпал после падения
-            block.setType(to); // Ставим тот же блок
+        ApplicableRegionSet regions = this.getRegionSet(block.getLocation());
+        if (regions == null)
+            return;
+
+        if (regions.testState(null, plugin.wgFlags.get("grief-allow-falling"))) {
+            event.setCancelled(true);
+            block.setType(to);
         }
     }
 
@@ -103,7 +103,17 @@ public class PlayerListener implements Listener {
         } else if (checkLocation(event.getLocation()) && plugin.getConfig().getBoolean("enable-wither-skull")
                 && event.getEntityType() == EntityType.WITHER_SKULL) {
             event.setCancelled(false);
-        }
+    }
+
+    private ApplicableRegionSet getRegionSet(Location location) {
+        RegionContainer container = this.worldGuard.getPlatform().getRegionContainer();
+        RegionQuery query = container.createQuery();
+        ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+        if (regionSet == null || regionSet.getRegions().isEmpty())
+            return null;
+
+        return regionSet;
     }
 
     // FIXME: remove method
