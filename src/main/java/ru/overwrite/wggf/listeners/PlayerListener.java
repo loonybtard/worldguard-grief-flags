@@ -98,10 +98,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (checkLocation(event.getLocation()) && plugin.getConfig().getBoolean("enable-any-explotions")) {
-            event.setCancelled(false);
-        } else if (checkLocation(event.getLocation()) && plugin.getConfig().getBoolean("enable-wither-skull")
-                && event.getEntityType() == EntityType.WITHER_SKULL) {
+        ApplicableRegionSet regions = this.getRegionSet(event.getLocation());
+        if (regions == null)
+            return;
+
+        if (regions.testState(null, plugin.wgFlags.get("grief-allow-explosions")))
             event.setCancelled(false);
     }
 
