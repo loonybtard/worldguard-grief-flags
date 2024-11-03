@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
             }
     }
 
-    @EventHandler // никакого приоритета не нужно, так как у хандлеров ВГ стоит priority = HIGH и ignoreCancelled
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         val entity = event.getEntity();
         val block = event.getBlock();
