@@ -18,7 +18,6 @@ public class WorldGuardGriefFixPlugin extends JavaPlugin implements Listener {
         this.listener = new PlayerListener(this);
         Bukkit.getPluginManager().registerEvents(this.listener, this);
         this.getCommand("wggf").setExecutor(this);
-        new Metrics(this, 14247);
     }
 
     @Override
