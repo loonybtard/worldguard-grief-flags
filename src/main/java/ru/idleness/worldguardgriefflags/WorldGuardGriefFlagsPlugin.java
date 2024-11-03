@@ -10,11 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.idleness.worldguardgriefflags.listeners.PlayerListener;
 
-import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
-
-    public HashMap<String, StateFlag> wgFlags = new HashMap<String, StateFlag>();
 
     @Override
     public void onLoad() {
@@ -30,32 +29,24 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
     }
 
     private void wgFlagsRegister() {
+        GriefFlag.prefix = this.getConfig().getString("wg-flag-prefix");;
+
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        Logger log = Bukkit.getLogger();
 
-        String[] flagsToInit = {
-                "grief-allow-falling",
-                "grief-allow-wither",
-                "grief-allow-piston",
-                "grief-allow-hopper",
-                "grief-allow-explosions",
-        };
-
-        for (String flagName : flagsToInit) {
+        for (GriefFlag flag : GriefFlag.values()) {
             try {
-                StateFlag flag = new StateFlag(flagName, false);
-                registry.register(flag);
-                wgFlags.put(flagName, flag);
-            } catch (IllegalStateException e) { // when plugin reloaded via plugin manager
-                wgFlags.put(flagName, (StateFlag) registry.get(flagName));
+                flag.setFlag(new StateFlag(flag.getName(), false));
+                registry.register(flag.getFlag());
+            } catch (IllegalStateException e) {
+                // when plugin reloaded via plugin manager
+                flag.setFlag((StateFlag) registry.get(flag.getName()));
             } catch (FlagConflictException e) {
-                // we don't give a fuck
+                log.log(Level.WARNING, "Flag " + flag.getName() + " already defined. Try to change \"wg-flag-prefix\"");
+                flag.setFlag((StateFlag) registry.get(flag.getName()));
             }
         }
 
 
-    }
-
-    private String color(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
     }
 }

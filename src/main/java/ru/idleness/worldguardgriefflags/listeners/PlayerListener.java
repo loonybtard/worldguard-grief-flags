@@ -20,6 +20,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import ru.idleness.worldguardgriefflags.GriefFlag;
 import ru.idleness.worldguardgriefflags.WorldGuardGriefFlagsPlugin;
 
 
@@ -46,7 +47,7 @@ public class PlayerListener implements Listener {
             if (regions == null)
                 continue;
 
-            if (regions.testState(null, plugin.wgFlags.get("grief-allow-piston"))) {
+            if (regions.testState(null, GriefFlag.PISTON.getFlag())) {
                 event.setCancelled(false);
                 return;
             }
@@ -61,7 +62,7 @@ public class PlayerListener implements Listener {
             if (regions == null)
                 continue;
 
-            if (regions.testState(null, plugin.wgFlags.get("grief-allow-piston"))) {
+            if (regions.testState(null, GriefFlag.PISTON.getFlag())) {
                 event.setCancelled(false);
                 return;
             }
@@ -74,7 +75,7 @@ public class PlayerListener implements Listener {
         if (regions == null)
             return;
 
-        if (regions.testState(null, plugin.wgFlags.get("grief-allow-hopper")))
+        if (regions.testState(null, GriefFlag.HOPPER.getFlag()))
             event.setCancelled(false);
     }
 
@@ -89,7 +90,7 @@ public class PlayerListener implements Listener {
         if (regions == null)
             return;
 
-        if (regions.testState(null, plugin.wgFlags.get("grief-allow-wither")))
+        if (regions.testState(null, GriefFlag.WITHER.getFlag()))
             event.setCancelled(false);
 
     }
@@ -107,7 +108,7 @@ public class PlayerListener implements Listener {
         if (regions == null)
             return;
 
-        if (regions.testState(null, plugin.wgFlags.get("grief-allow-falling"))) {
+        if (regions.testState(null, GriefFlag.FALLING.getFlag())) {
             event.setCancelled(true);
             block.setType(to);
         }
@@ -119,7 +120,7 @@ public class PlayerListener implements Listener {
         if (regions == null)
             return;
 
-        if (regions.testState(null, plugin.wgFlags.get("grief-allow-explosions")))
+        if (regions.testState(null, GriefFlag.EXPLOSIONS.getFlag()))
             event.setCancelled(false);
     }
 
