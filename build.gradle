@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'me.afek'
-version = '1.0.0'
+version = '1.0.1'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -20,16 +20,18 @@ repositories {
     }
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven { url "https://maven.enginehub.org/repo/" }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
 
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.9'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
