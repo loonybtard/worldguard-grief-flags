@@ -1,10 +1,10 @@
-name: WorldGuardGriefFix
+name: worldguard-grief-flags
 main: ru.idleness.worldguardgriefflags.WorldGuardGriefFlagsPlugin
 authors:
   - ThaEin
-  - Afek
-  - OverWrite
-version: 4.0
+  - Afek (original plugin)
+  - OverWrite (original plugin)
+version: 1.0
 api-version: 1.13
 depend: [WorldGuard]
 commands:
