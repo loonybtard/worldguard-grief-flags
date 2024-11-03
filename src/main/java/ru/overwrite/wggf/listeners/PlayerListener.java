@@ -60,9 +60,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onItemMove(InventoryMoveItemEvent event) {
-        if (plugin.getConfig().getBoolean("enable-minecart")) {
+        ApplicableRegionSet regions = getRegionSet(event.getSource().getLocation());
+        if (regions == null)
+            return;
+
+        if (regions.testState(null, plugin.wgFlags.get("grief-allow-hopper")))
             event.setCancelled(false);
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
