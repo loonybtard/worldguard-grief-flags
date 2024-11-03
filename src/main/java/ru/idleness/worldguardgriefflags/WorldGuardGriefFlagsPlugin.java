@@ -6,8 +6,6 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.idleness.worldguardgriefflags.listeners.PlayerListener;
@@ -15,8 +13,6 @@ import ru.idleness.worldguardgriefflags.listeners.PlayerListener;
 import java.util.HashMap;
 
 public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
-
-    private PlayerListener listener;
 
     public HashMap<String, StateFlag> wgFlags = new HashMap<String, StateFlag>();
 
@@ -30,26 +26,7 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-        this.listener = new PlayerListener(this);
-        Bukkit.getPluginManager().registerEvents(this.listener, this);
-        this.getCommand("wggf").setExecutor(this);
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("wggf.command.reload")) {
-            sender.sendMessage(color("&cУ вас нет разрешений!"));
-            return true;
-        }
-
-        if (args.length <= 0 || !args[0].equalsIgnoreCase("reload")) {
-            sender.sendMessage(color("&f[&6WGGF&f] /wggf reload - перезагрузить конфиг"));
-            return true;
-        }
-
-        reloadConfig();
-        sender.sendMessage(color("&f[&6WGGF&f] Конфиг был перезагружен!"));
-        return true;
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
     }
 
     private void wgFlagsRegister() {
