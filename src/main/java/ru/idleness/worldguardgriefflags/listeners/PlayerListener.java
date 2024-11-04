@@ -131,12 +131,4 @@ public class PlayerListener implements Listener {
 
         return regionSet;
     }
-
-    // FIXME: remove method
-    private boolean checkLocation(Location location) {
-        if (location == null)
-            return false;
-
-        return true;
-    }
 }
