@@ -5,6 +5,8 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import dev.espi.protectionstones.PSProtectBlock;
+import dev.espi.protectionstones.ProtectionStones;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -35,6 +37,10 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPistonExtend(BlockPistonExtendEvent event) {
+
+        boolean isRegionAffected = false;
+        boolean allow = true;
+
         for (Block block : event.getBlocks()) {
             Location locationDest = block.getLocation().add(
                     event.getDirection().getModX(),
@@ -45,26 +51,37 @@ public class PlayerListener implements Listener {
             if (regions == null)
                 continue;
 
-            if (regions.testState(null, GriefFlag.PISTON.getFlag())) {
-                event.setCancelled(false);
-                return;
-            }
+            isRegionAffected = true;
+
+            allow = allow &&
+                    regions.testState(null, GriefFlag.PISTON.getFlag())
+                    && isAllowedByPsPreventPush(block);
         }
+
+        if (isRegionAffected && allow)
+            event.setCancelled(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockRetract(BlockPistonRetractEvent event) {
+
+        boolean isRegionAffected = false;
+        boolean allow = true;
 
         for (Block block : event.getBlocks()) {
             ApplicableRegionSet regions = getRegionSet(block.getLocation());
             if (regions == null)
                 continue;
 
-            if (regions.testState(null, GriefFlag.PISTON.getFlag())) {
-                event.setCancelled(false);
-                return;
-            }
+            isRegionAffected = true;
+
+            allow = allow &&
+                    regions.testState(null, GriefFlag.PISTON.getFlag())
+                    && isAllowedByPsPreventPush(block);
         }
+
+        if (isRegionAffected && allow)
+            event.setCancelled(false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -130,5 +147,19 @@ public class PlayerListener implements Listener {
             return null;
 
         return regionSet;
+    }
+
+    private boolean isAllowedByPsPreventPush(Block block) {
+        if (!this.plugin.isProtectionStoneLoaded)
+            return true;
+
+        if (!ProtectionStones.isProtectBlock(block))
+            return true;
+
+        PSProtectBlock psProtectBlock = ProtectionStones.getBlockOptions(block);
+        if (psProtectBlock == null)
+            return true;
+
+        return !psProtectBlock.preventPistonPush;
     }
 }
