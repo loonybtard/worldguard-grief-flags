@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.idleness.worldguardgriefflags.listeners.PlayerListener;
@@ -20,6 +21,8 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
 
     public final WorldGuardEntityListenerWrapper worldGuardEntityListenerWrapper;
     public final EventAbstractionListener eventAbstractionListener;
+
+    public boolean isProtectionStoneLoaded = false;
 
     public WorldGuardGriefFlagsPlugin() {
         super();
@@ -36,7 +39,10 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        this.saveDefaultConfig();
+        saveDefaultConfig();
+
+        checkSoftdeps();
+
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
         Bukkit.getPluginManager().registerEvents(this.worldGuardEntityListenerWrapper, this);
         Bukkit.getPluginManager().registerEvents(this.eventAbstractionListener, this);
@@ -91,5 +97,13 @@ public class WorldGuardGriefFlagsPlugin extends JavaPlugin implements Listener {
             }
         }
 
+    }
+
+    private void checkSoftdeps() {
+        PluginManager pm = getServer().getPluginManager();
+
+        if (pm.getPlugin("ProtectionStones") != null && pm.getPlugin("ProtectionStones").isEnabled()) {
+            this.isProtectionStoneLoaded = true;
+        }
     }
 }
