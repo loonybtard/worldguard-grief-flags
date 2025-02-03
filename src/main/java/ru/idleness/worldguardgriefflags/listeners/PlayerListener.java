@@ -30,9 +30,12 @@ public class PlayerListener implements Listener {
 
     WorldGuard worldGuard;
 
+    boolean psRespectPistonPushSetting = true;
+
     public PlayerListener(WorldGuardGriefFlagsPlugin plugin) {
         this.plugin = plugin;
         this.worldGuard = WorldGuard.getInstance();
+        psRespectPistonPushSetting = plugin.getConfig().getBoolean("ps-respect-prevent-piston-push-setting", true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -150,7 +153,7 @@ public class PlayerListener implements Listener {
     }
 
     private boolean isAllowedByPsPreventPush(Block block) {
-        if (!this.plugin.isProtectionStoneLoaded)
+        if (!this.plugin.isProtectionStoneLoaded || !psRespectPistonPushSetting)
             return true;
 
         if (!ProtectionStones.isProtectBlock(block))

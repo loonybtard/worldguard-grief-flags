@@ -8,3 +8,6 @@
 # example: grief-allow-wither
 #          ^^^^^
 wg-flag-prefix: "grief"
+
+# When "true" grief-allow-piston respects setting "prevent_piston_push" from ProtectionStones plugin
+ps-respect-prevent-piston-push-setting: true
